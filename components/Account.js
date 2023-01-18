@@ -8,13 +8,38 @@ export default function Account({ session }) {
   const [username, setUsername] = useState(null)
   const [contactEmail, setContactEmail] = useState(null)
   const [contactNumber, setContactNumber] = useState(null)
-
+  const [menus, setMenus] = useState(null)
   const [menuTitle, setMenuTitle] = useState(null)
   const [menuDescription, setMenuDescription] = useState(null)
 
   useEffect(() => {
     getProfile()
+    getMenus()
   }, [session])
+
+  async function getMenus(){
+    try {
+      setLoading(true)
+
+      let { data, error, status } = await supabase
+        .from('menu')
+        .select(`id, title, items, description`)
+        .eq('user_id', user.id)
+
+      if (error && status !== 406) {
+        throw error
+      }
+
+      if (data) {
+        setMenus(data)
+      }
+
+    } catch (error) {
+      alert('Error loading menus')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   async function getProfile() {
     try {
@@ -53,9 +78,9 @@ export default function Account({ session }) {
         contact_number: contactNumber,
         updated_at: new Date().toISOString(),
       }
-      console.log(updates)
+
       let { error } = await supabase.from('profiles').upsert(updates)
-      console.log(error)
+
       if (error) throw error
       alert('Profile updated!')
     } catch (error) {
@@ -85,7 +110,6 @@ export default function Account({ session }) {
         setMenuDescription(null)
 
     } catch (error) {
-      console.log(error)
       alert('Error creating menu!')
     } finally {
       setLoading(false)
@@ -159,10 +183,16 @@ export default function Account({ session }) {
           onClick={() => createMenu({ menuTitle, menuDescription })}
           disabled={loading}
         >
-          {loading ? 'Loading ...' : 'Update'}
+          {loading ? 'Loading ...' : 'Create Menu'}
         </button>
       </div>
 
+      {menus?.map(element => {
+        return (
+          <div>{element.title}</div>
+        )
+      })
+      }
       <div>
         <button className="button block" onClick={() => supabase.auth.signOut()}>
           Sign Out
