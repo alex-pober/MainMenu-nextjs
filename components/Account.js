@@ -14,7 +14,7 @@ export default function Account({ session }) {
   const [menus, setMenus] = useState(null)
   const [menuTitle, setMenuTitle] = useState(null)
   const [menuDescription, setMenuDescription] = useState(null)
-console.log(menus)
+
   useEffect(() => {
     getProfile()
     getMenus()
