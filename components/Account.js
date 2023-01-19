@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
+import Link from 'next/link'
 
 export default function Account({ session }) {
   const supabase = useSupabaseClient()
@@ -11,7 +14,7 @@ export default function Account({ session }) {
   const [menus, setMenus] = useState(null)
   const [menuTitle, setMenuTitle] = useState(null)
   const [menuDescription, setMenuDescription] = useState(null)
-
+console.log(menus)
   useEffect(() => {
     getProfile()
     getMenus()
@@ -23,7 +26,7 @@ export default function Account({ session }) {
 
       let { data, error, status } = await supabase
         .from('menu')
-        .select(`id, title, items, description`)
+        .select(`id, title, description`)
         .eq('user_id', user.id)
 
       if (error && status !== 406) {
@@ -112,6 +115,7 @@ export default function Account({ session }) {
     } catch (error) {
       alert('Error creating menu!')
     } finally {
+      getMenus()
       setLoading(false)
     }
   }
@@ -189,7 +193,12 @@ export default function Account({ session }) {
 
       {menus?.map(element => {
         return (
-          <div>{element.title}</div>
+          <Link href={`account/${element.id}`}>
+            <Paper key={element.id} variant="outlined" sx={{p:1, my: 0.5, '&:hover': {outline: "2px solid #42a5f5", cursor:"pointer"}}}>
+              <Typography variant="h6">{element.title}</Typography>
+              <Typography variant="body2">{element.description}</Typography>
+            </Paper>
+          </Link>
         )
       })
       }
