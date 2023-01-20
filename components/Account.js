@@ -193,7 +193,10 @@ export default function Account({ session }) {
 
       {menus?.map(element => {
         return (
-          <Link href={`account/${element.id}`}>
+          <Link href={{
+            pathname: `account/${element.id}`,
+            query: {title: element.title, desc: element.description}
+            }}>
             <Paper key={element.id} variant="outlined" sx={{p:1, my: 0.5, '&:hover': {outline: "2px solid #42a5f5", cursor:"pointer"}}}>
               <Typography variant="h6">{element.title}</Typography>
               <Typography variant="body2">{element.description}</Typography>
