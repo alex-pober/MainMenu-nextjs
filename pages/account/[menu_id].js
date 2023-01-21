@@ -8,7 +8,10 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Autocomplete, {createFilterOptions} from '@mui/material/Autocomplete';
 import _ from 'lodash'
+
+const filter = createFilterOptions();
 
 export default function Menu() {
   const router = useRouter()
@@ -19,7 +22,6 @@ export default function Menu() {
   const [name, setName] = useState(null)
   const [price, setPrice] = useState(null)
   const [description, setDescription] = useState(null)
-
   let grouped = _.groupBy(items, item => item.category)
 
   useEffect(() => {
@@ -76,28 +78,30 @@ export default function Menu() {
   }
 
   return (
-    <Paper sx={{minHeight: "95vh", minWidth: '360px', maxWidth: '800px', margin: "auto", mt: "2vh", background: "#fef9f4", borderRadius: "25px", display: 'flex', flexDirection:"column"}}>
-      <Typography variant='h4' align='center' sx={{pt: 1}}>{router.query.title}</Typography>
+    <Paper sx={{minHeight: "95vh", minWidth: '360px', maxWidth: '800px', margin: "auto", background: "#fef9f4", borderRadius: "25px", display: 'flex', flexDirection:"column"}}>
+      <Typography variant='h5' align='center' sx={{pt: 1}}>{router.query.title}</Typography>
       <Typography variant='subtitle1' align='center' color="#807D7A">{router.query.desc}</Typography>
       <Divider variant="middle" />
 
-      <Box sx={{display: 'flex', flexWrap: 'wrap', flexDirection: 'row'}}>
+      <Box sx={{display: 'flex', flexWrap: 'wrap', width: "100%"}}>
         {
           Object.keys(grouped).map(category => {
             let items = (grouped[`${category}`])
             return (
-              <Box sx={{display: 'flex', flexWrap: 'warp', width: '85%',flexDirection: "column", m:"auto"}}>
-                <Typography variant="h4" align='center'>{category}</Typography>
-                <Divider/>
+              <Box sx={{display: 'flex', flexWrap: 'wrap', width: '80%',flexDirection: "column", minWidth: '150px', m:"auto"}}>
+                <Typography variant="h6" align='center'>{category}</Typography>
                 {items.map(item => {
                   return (
-                    <Box sx={{display: 'flex', justifyContent: 'space-between', m: 0.5}}>
-                      <Box>
-                        <Typography>{item.name}</Typography>
-                        <Typography>{item.description}</Typography>
+                    <>
+                      <Box sx={{display: 'flex', justifyContent: 'space-between', m: 0.5, alignItems: 'center'}}>
+                        <Box>
+                          <Typography variant="subtitle1">{item.name}</Typography>
+                          <Typography variant="body1" color="grey">{item.description}</Typography>
+                        </Box>
+                        <Typography variant="button">{item.price}</Typography>
                       </Box>
-                      <Typography>{item.price}</Typography>
-                    </Box>
+                      <Divider />
+                    </>
 
                   )
                 })}
@@ -109,8 +113,41 @@ export default function Menu() {
 
       <Box sx={{border: '1px solid grey', m: 2, marginTop: 'auto', p: 2}}>
         <Typography variant='h6'>Add Menu Item</Typography>
-        <TextField label="Category" variant="outlined" size="small"
-          onChange={(e) => setCategory(e.target.value)}
+        <Autocomplete
+          value={category}
+          onChange={(event, newValue) => {
+            if (typeof newValue === 'string') {
+              setCategory(newValue);
+            } else if (newValue && newValue.inputValue) {
+              // Create a new value from the user input
+              setCategory(newValue.inputValue);
+            } else {
+              setCategory(newValue);
+            }
+          }}
+          filterOptions={(options, params) => {
+            const filtered = Object.keys(grouped)
+            console.log(filtered)
+            const { inputValue } = params;
+            // Suggest the creation of a new value
+            const isExisting = options.some((option) => inputValue === option);
+            if (inputValue !== '' && !isExisting) {
+              filtered.push(inputValue);
+            }
+
+            return filtered;
+          }}
+          selectOnFocus
+          clearOnBlur
+          handleHomeEndKeys
+          id="free-solo-with-text-demo"
+          options={Object.keys(grouped)}
+          renderOption={(props, option) => <li {...props}>{option}</li>}
+          sx={{ width: 300 }}
+          freeSolo
+          renderInput={(params) => (
+            <TextField {...params} label="Category" />
+          )}
         />
         <TextField label="Name" variant="outlined" size="small"
           onChange={(e) => setName(e.target.value)}
