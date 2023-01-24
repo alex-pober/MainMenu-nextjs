@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Autocomplete, {createFilterOptions} from '@mui/material/Autocomplete';
 import _ from 'lodash'
-
+import AddMenuItem from '../../components/AddMenuItem';
 const filter = createFilterOptions();
 
 export default function Menu() {
@@ -22,8 +22,8 @@ export default function Menu() {
   const [name, setName] = useState(null)
   const [price, setPrice] = useState(null)
   const [description, setDescription] = useState(null)
+  console.log(items)
   let grouped = _.groupBy(items, item => item.category)
-
   useEffect(() => {
     if (router.isReady) getItems()
   }, [router.isReady])
@@ -45,33 +45,6 @@ export default function Menu() {
 
     } catch (error) {
         alert(`${error}`)
-    } finally {
-
-    }
-  }
-
-  async function createItem({category, name, price, description, menuId}) {
-    try {
-
-      let payload = {
-        category: category,
-        name: name,
-        price: price,
-        description: description,
-        menu_id: menuId
-      }
-
-      let {data, error, status} = await supabase
-        .from('item')
-        .insert(payload)
-        .select()
-
-        if (error && status !== 406) {
-          throw error
-        }
-        setItems([...items, payload])
-    } catch (error) {
-
     } finally {
 
     }
@@ -111,57 +84,12 @@ export default function Menu() {
         }
       </Box>
 
-      <Box sx={{border: '1px solid grey', m: 2, marginTop: 'auto', p: 2}}>
-        <Typography variant='h6'>Add Menu Item</Typography>
-        <Autocomplete
-          value={category}
-          onChange={(event, newValue) => {
-            if (typeof newValue === 'string') {
-              setCategory(newValue);
-            } else if (newValue && newValue.inputValue) {
-              // Create a new value from the user input
-              setCategory(newValue.inputValue);
-            } else {
-              setCategory(newValue);
-            }
-          }}
-          filterOptions={(options, params) => {
-            const filtered = Object.keys(grouped)
-            console.log(filtered)
-            const { inputValue } = params;
-            // Suggest the creation of a new value
-            const isExisting = options.some((option) => inputValue === option);
-            if (inputValue !== '' && !isExisting) {
-              filtered.push(inputValue);
-            }
-
-            return filtered;
-          }}
-          selectOnFocus
-          clearOnBlur
-          handleHomeEndKeys
-          id="free-solo-with-text-demo"
-          options={Object.keys(grouped)}
-          renderOption={(props, option) => <li {...props}>{option}</li>}
-          sx={{ width: 300 }}
-          freeSolo
-          renderInput={(params) => (
-            <TextField {...params} label="Category" />
-          )}
-        />
-        <TextField label="Name" variant="outlined" size="small"
-          onChange={(e) => setName(e.target.value)}
-        />
-        <TextField label="Price" variant="outlined" size="small"
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <TextField label="Description" variant="outlined" size="small"
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <Button
-          onClick={() => {createItem({category, name, price, description, menuId})}}
-        >Submit</Button>
-      </Box>
+      <AddMenuItem
+        items={items}
+        grouped={grouped}
+        menuId={menuId}
+        supabase={supabase}
+        addItem={(payload) => setItems([...items, payload])}/>
     </Paper>
     );
   }
