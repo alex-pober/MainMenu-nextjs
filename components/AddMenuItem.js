@@ -9,10 +9,10 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 
 function AddMenuItem({grouped, menuId, supabase, addItem}) {
-  const [name, setName] = useState(null)
-  const [price, setPrice] = useState(null)
-  const [category, setCategory] = useState(null)
-  const [description, setDescription] = useState(null)
+  const [name, setName] = useState(undefined)
+  const [price, setPrice] = useState(undefined)
+  const [category, setCategory] = useState(undefined)
+  const [description, setDescription] = useState(undefined)
 
   async function createItem({category, name, price, description, menuId}) {
     try {

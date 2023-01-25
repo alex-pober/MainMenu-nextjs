@@ -8,12 +8,12 @@ export default function Account({ session }) {
   const supabase = useSupabaseClient()
   const user = useUser()
   const [loading, setLoading] = useState(true)
-  const [username, setUsername] = useState(null)
-  const [contactEmail, setContactEmail] = useState(null)
-  const [contactNumber, setContactNumber] = useState(null)
-  const [menus, setMenus] = useState(null)
-  const [menuTitle, setMenuTitle] = useState(null)
-  const [menuDescription, setMenuDescription] = useState(null)
+  const [username, setUsername] = useState("")
+  const [contactEmail, setContactEmail] = useState("")
+  const [contactNumber, setContactNumber] = useState(Number)
+  const [menus, setMenus] = useState(undefined)
+  const [menuTitle, setMenuTitle] = useState(undefined)
+  const [menuDescription, setMenuDescription] = useState(undefined)
 
   useEffect(() => {
     getProfile()
@@ -109,8 +109,8 @@ export default function Account({ session }) {
           throw error
         }
 
-        setMenuTitle(null)
-        setMenuDescription(null)
+        setMenuTitle(undefined)
+        setMenuDescription(undefined)
 
     } catch (error) {
       alert('Error creating menu!')

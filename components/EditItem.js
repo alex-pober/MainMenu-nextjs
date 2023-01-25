@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 export default function EditItem({ item, supabase, updateItemState }) {
-  const [category, setCategory] = useState(item.category);
+  const [category, setCategory] = useState(item?.category);
   const [name, setName] = useState(item.name);
   const [description, setDescription] = useState(item.description);
   const [price, setPrice] = useState(item.price);
@@ -49,20 +49,20 @@ export default function EditItem({ item, supabase, updateItemState }) {
     >
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <TextField
-          value={name}
+          value={name || ""}
           variant="filled"
           size="small"
           onChange={(e) => setName(e.target.value)}
         />
         <TextField
-          value={description}
+          value={description || ""}
           variant="filled"
           size="small"
           onChange={(e) => setDescription(e.target.value)}
         />
       </Box>
       <TextField
-        value={price}
+        value={price || ""}
         variant="filled"
         size="small"
         onChange={(e) => setPrice(e.target.value)}

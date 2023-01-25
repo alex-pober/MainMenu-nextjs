@@ -17,16 +17,12 @@ export default function Menu() {
   const router = useRouter();
   const supabase = useSupabaseClient();
   const menuId = router.query.menu_id;
-  const [items, setItems] = useState(null);
-  const [category, setCategory] = useState(null);
-  const [name, setName] = useState(null);
-  const [price, setPrice] = useState(null);
-  const [description, setDescription] = useState(null);
+  const [items, setItems] = useState(undefined);
+
   useEffect(() => {
     if (router.isReady) getItems();
   }, [router.isReady]);
   let grouped = _.groupBy(items, (item) => item.category);
-  console.log(items);
 
   async function getItems() {
     try {
@@ -74,6 +70,7 @@ export default function Menu() {
           let itemsGrouped = grouped[`${category}`];
           return (
             <Box
+              key={category}
               sx={{
                 display: "flex",
                 flexWrap: "wrap",
@@ -86,9 +83,9 @@ export default function Menu() {
               <Typography variant="h6" align="center">
                 {category}
               </Typography>
-              {itemsGrouped.map((item) => {
+              {itemsGrouped.map((item, index) => {
                 return (
-                  <>
+                  <Box key={index}>
                     <Box
                       sx={{
                         display: "flex",
@@ -122,7 +119,7 @@ export default function Menu() {
                       }}
                     />
                     <Divider />
-                  </>
+                  </Box>
                 );
               })}
             </Box>
