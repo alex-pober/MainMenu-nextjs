@@ -8,12 +8,12 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 
-function AddMenuItem({items, grouped, menuId, supabase, addItem}) {
+function AddMenuItem({grouped, menuId, supabase, addItem}) {
   const [name, setName] = useState(null)
   const [price, setPrice] = useState(null)
   const [category, setCategory] = useState(null)
   const [description, setDescription] = useState(null)
-  console.log(addItem)
+
   async function createItem({category, name, price, description, menuId}) {
     try {
 
@@ -33,7 +33,8 @@ function AddMenuItem({items, grouped, menuId, supabase, addItem}) {
         if (error && status !== 406) {
           throw error
         }
-        addItem(payload)
+
+        addItem(data[0])
     } catch (error) {
 
     } finally {

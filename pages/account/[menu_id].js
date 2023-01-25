@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete, {createFilterOptions} from '@mui/material/Autocomplete';
 import _ from 'lodash'
 import AddMenuItem from '../../components/AddMenuItem';
-const filter = createFilterOptions();
+import EditItem from '../../components/EditItem';
 
 export default function Menu() {
   const router = useRouter()
@@ -22,7 +22,6 @@ export default function Menu() {
   const [name, setName] = useState(null)
   const [price, setPrice] = useState(null)
   const [description, setDescription] = useState(null)
-  console.log(items)
   let grouped = _.groupBy(items, item => item.category)
   useEffect(() => {
     if (router.isReady) getItems()
@@ -64,6 +63,7 @@ export default function Menu() {
               <Box sx={{display: 'flex', flexWrap: 'wrap', width: '80%',flexDirection: "column", minWidth: '150px', m:"auto"}}>
                 <Typography variant="h6" align='center'>{category}</Typography>
                 {items.map(item => {
+                   
                   return (
                     <>
                       <Box sx={{display: 'flex', justifyContent: 'space-between', m: 0.5, alignItems: 'center'}}>
@@ -73,6 +73,8 @@ export default function Menu() {
                         </Box>
                         <Typography variant="button">{item.price}</Typography>
                       </Box>
+
+                      <EditItem item={item}/>
                       <Divider />
                     </>
 
@@ -85,7 +87,6 @@ export default function Menu() {
       </Box>
 
       <AddMenuItem
-        items={items}
         grouped={grouped}
         menuId={menuId}
         supabase={supabase}
