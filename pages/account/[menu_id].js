@@ -12,13 +12,16 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import _ from "lodash";
 import AddMenuItem from "../../components/AddMenuItem";
 import EditItem from "../../components/EditItem";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import IconButton from "@mui/material/IconButton";
 
 export default function Menu() {
   const router = useRouter();
   const supabase = useSupabaseClient();
   const menuId = router.query.menu_id;
   const [items, setItems] = useState(undefined);
-
+  const [editingItems, setEditingItems] = useState([]);
+  console.log(editingItems);
   useEffect(() => {
     if (router.isReady) getItems();
   }, [router.isReady]);
@@ -65,7 +68,7 @@ export default function Menu() {
       </Typography>
       <Divider variant="middle" />
 
-      <Box sx={{ display: "flex", flexWrap: "wrap", width: "100%" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", flexWrap: "wrap", minWidth: "360px", maxWidth: "750px", justifyContent: "space-around", marginInline: '5%'}}>
         {Object.keys(grouped).map((category) => {
           let itemsGrouped = grouped[`${category}`];
           return (
@@ -74,10 +77,9 @@ export default function Menu() {
               sx={{
                 display: "flex",
                 flexWrap: "wrap",
-                width: "80%",
                 flexDirection: "column",
-                minWidth: "150px",
-                m: "auto",
+                minWidth: "360px",
+                maxWidth: '800px',
               }}
             >
               <Typography variant="h6" align="center">
@@ -85,40 +87,57 @@ export default function Menu() {
               </Typography>
               {itemsGrouped.map((item, index) => {
                 return (
-                  <Box key={index}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        m: 0.5,
-                        alignItems: "center",
-                      }}
-                    >
-                      <Box>
-                        <Typography variant="subtitle1">{item.name}</Typography>
-                        <Typography variant="body1" color="grey">
-                          {item.description}
-                        </Typography>
+                  <Box key={index} sx={{display: 'flex', justifyContent: 'space-between', minWidth: "360px", maxWidth: "800px", borderBottom: '1px solid #d3d3d3'}}>
+                    {editingItems.includes(item.id) ? (
+                      <EditItem
+                        item={item}
+                        supabase={supabase}
+                        updateItemState={(payload) => {
+                          setItems(
+                            items.map((item) => {
+                              if (item.id === payload[0].id) {
+                                return payload[0];
+                              } else {
+                                return item;
+                              }
+                            })
+                          );
+                        }}
+                      />
+                    ) : (
+                      <Box
+                        id="item-description-price"
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          m: 0.5,
+                          alignItems: "center",
+                          width: "-webkit-fill-available"
+                        }}
+                      >
+                        <Box>
+                          <Typography variant="subtitle1">
+                            {item.name}
+                          </Typography>
+                          <Typography variant="body1" color="grey">
+                            {item.description}
+                          </Typography>
+                        </Box>
+                        <Typography variant="button">{item.price}</Typography>
                       </Box>
-                      <Typography variant="button">{item.price}</Typography>
+                    )}
+                    <Box sx={{display: 'flex', alignItems: "center"}}>
+                      <IconButton
+                        sx={{height: 'fit-content'}}
+                        size="small"
+                        //adds item.id if its not in array and removes it if its in there already
+                        onClick={() => {
+                          setEditingItems(_.xor([...editingItems], [item.id]));
+                        }}
+                      >
+                        <EditTwoToneIcon fontSize="inherit" />
+                      </IconButton>
                     </Box>
-
-                    <EditItem
-                      item={item}
-                      supabase={supabase}
-                      updateItemState={(payload) => {
-                        setItems(
-                          items.map((item) => {
-                            if (item.id === payload[0].id) {
-                              return payload[0];
-                            } else {
-                              return item;
-                            }
-                          })
-                        );
-                      }}
-                    />
-                    <Divider />
                   </Box>
                 );
               })}

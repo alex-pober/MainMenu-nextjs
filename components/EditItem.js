@@ -45,6 +45,7 @@ export default function EditItem({ item, supabase, updateItemState }) {
         justifyContent: "space-between",
         m: 0.5,
         alignItems: "center",
+        width: "-webkit-fill-available"
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "column" }}>
