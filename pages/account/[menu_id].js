@@ -14,6 +14,8 @@ import AddMenuItem from "../../components/AddMenuItem";
 import EditItem from "../../components/EditItem";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import IconButton from "@mui/material/IconButton";
+import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function Menu() {
   const router = useRouter();
@@ -68,7 +70,17 @@ export default function Menu() {
       </Typography>
       <Divider variant="middle" />
 
-      <Box sx={{ display: "flex", flexDirection: "column", flexWrap: "wrap", minWidth: "360px", maxWidth: "750px", justifyContent: "space-around", marginInline: '5%'}}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          flexWrap: "wrap",
+          minWidth: "360px",
+          maxWidth: "750px",
+          justifyContent: "space-around",
+          marginInline: "4%",
+        }}
+      >
         {Object.keys(grouped).map((category) => {
           let itemsGrouped = grouped[`${category}`];
           return (
@@ -79,7 +91,7 @@ export default function Menu() {
                 flexWrap: "wrap",
                 flexDirection: "column",
                 minWidth: "360px",
-                maxWidth: '800px',
+                maxWidth: "800px",
               }}
             >
               <Typography variant="h6" align="center">
@@ -87,7 +99,16 @@ export default function Menu() {
               </Typography>
               {itemsGrouped.map((item, index) => {
                 return (
-                  <Box key={index} sx={{display: 'flex', justifyContent: 'space-between', minWidth: "360px", maxWidth: "800px", borderBottom: '1px solid #d3d3d3'}}>
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      minWidth: "360px",
+                      maxWidth: "800px",
+                      borderBottom: "1px solid #d3d3d3",
+                    }}
+                  >
                     {editingItems.includes(item.id) ? (
                       <EditItem
                         item={item}
@@ -103,6 +124,9 @@ export default function Menu() {
                             })
                           );
                         }}
+                        deleteItemState={(id) => {
+                          setItems(items.filter((item) => item.id !== id));
+                        }}
                       />
                     ) : (
                       <Box
@@ -112,7 +136,7 @@ export default function Menu() {
                           justifyContent: "space-between",
                           m: 0.5,
                           alignItems: "center",
-                          width: "-webkit-fill-available"
+                          width: "-webkit-fill-available",
                         }}
                       >
                         <Box>
@@ -126,18 +150,55 @@ export default function Menu() {
                         <Typography variant="button">{item.price}</Typography>
                       </Box>
                     )}
-                    <Box sx={{display: 'flex', alignItems: "center"}}>
+
+                    {editingItems.includes(item.id) ? (
                       <IconButton
-                        sx={{height: 'fit-content'}}
+                        sx={{
+                          height: "auto",
+                          display: "flex",
+                          alignItems: "center",
+                          margin: "auto",
+                        }}
                         size="small"
                         //adds item.id if its not in array and removes it if its in there already
                         onClick={() => {
                           setEditingItems(_.xor([...editingItems], [item.id]));
                         }}
                       >
-                        <EditTwoToneIcon fontSize="inherit" />
+                        <Tooltip
+                          title="Cancel"
+                          leaveDelay={100}
+                          enterDelay={100}
+                          disableFocusListener
+                          disableTouchListener
+                        >
+                          <CancelTwoToneIcon fontSize="inherit" />
+                        </Tooltip>
                       </IconButton>
-                    </Box>
+                    ) : (
+                      <IconButton
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          margin: "auto",
+                        }}
+                        size="small"
+                        //adds item.id if its not in array and removes it if its in there already
+                        onClick={() => {
+                          setEditingItems(_.xor([...editingItems], [item.id]));
+                        }}
+                      >
+                        <Tooltip
+                          title="Edit"
+                          leaveDelay={100}
+                          enterDelay={100}
+                          disableFocusListener
+                          disableTouchListener
+                        >
+                          <EditTwoToneIcon fontSize="inherit" />
+                        </Tooltip>
+                      </IconButton>
+                    )}
                   </Box>
                 );
               })}
