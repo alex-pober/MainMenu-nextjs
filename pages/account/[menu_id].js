@@ -6,27 +6,25 @@ import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import _ from "lodash";
 import AddMenuItem from "../../components/AddMenuItem";
 import EditItem from "../../components/EditItem";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import IconButton from "@mui/material/IconButton";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
-import Tooltip from "@mui/material/Tooltip";
-
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import NavBar from "../../components/NavBar";
 export default function Menu() {
   const router = useRouter();
   const supabase = useSupabaseClient();
   const menuId = router.query.menu_id;
   const [items, setItems] = useState(undefined);
   const [editingItems, setEditingItems] = useState([]);
-  console.log(editingItems);
+
   useEffect(() => {
     if (router.isReady) getItems();
   }, [router.isReady]);
+
   let grouped = _.groupBy(items, (item) => item.category);
 
   async function getItems() {
@@ -50,6 +48,8 @@ export default function Menu() {
   }
 
   return (
+    <>
+    <NavBar />
     <Paper
       sx={{
         minHeight: "95vh",
@@ -100,106 +100,93 @@ export default function Menu() {
               {itemsGrouped.map((item, index) => {
                 return (
                   <Box
-                    key={index}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      minWidth: "360px",
-                      maxWidth: "800px",
-                      borderBottom: "1px solid #d3d3d3",
-                    }}
+                  key={index}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    minWidth: "360px",
+                    maxWidth: "800px",
+                    borderBottom: "1px solid #d3d3d3",
+                  }}
                   >
-                    {editingItems.includes(item.id) ? (
-                      <EditItem
+                      {editingItems.includes(item.id) ? (
+                        <EditItem
                         item={item}
                         supabase={supabase}
                         updateItemState={(payload) => {
-                          setItems(
-                            items.map((item) => {
-                              if (item.id === payload[0].id) {
-                                return payload[0];
-                              } else {
-                                return item;
-                              }
-                            })
-                          );
-                        }}
-                        deleteItemState={(id) => {
-                          setItems(items.filter((item) => item.id !== id));
-                        }}
-                      />
-                    ) : (
-                      <Box
-                        id="item-description-price"
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          m: 0.5,
-                          alignItems: "center",
-                          width: "-webkit-fill-available",
-                        }}
-                      >
-                        <Box>
-                          <Typography variant="subtitle1">
-                            {item.name}
-                          </Typography>
-                          <Typography variant="body1" color="grey">
-                            {item.description}
-                          </Typography>
+                          setEditingItems(
+                            _.xor([...editingItems], [payload[0].id])
+                            );
+                            setItems(
+                              items.map((item) => {
+                                if (item.id === payload[0].id) {
+                                  return payload[0];
+                                } else {
+                                  return item;
+                                }
+                              })
+                            );
+                          }}
+                          deleteItemState={(id) => {
+                            setItems(items.filter((item) => item.id !== id));
+                          }}
+                          />
+                      ) : (
+                        <Box
+                          id="item-description-price"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            m: 0.5,
+                            alignItems: "center",
+                            width: "-webkit-fill-available",
+                          }}
+                        >
+                          <Box>
+                            <Typography variant="subtitle1">
+                              {item.name}
+                            </Typography>
+                            <Typography variant="body1" color="grey">
+                              {item.description}
+                            </Typography>
+                          </Box>
+                          <Typography variant="button">{item.price}</Typography>
                         </Box>
-                        <Typography variant="button">{item.price}</Typography>
-                      </Box>
-                    )}
+                      )}
 
-                    {editingItems.includes(item.id) ? (
-                      <IconButton
-                        sx={{
-                          height: "auto",
-                          display: "flex",
-                          alignItems: "center",
-                          margin: "auto",
-                        }}
-                        size="small"
-                        //adds item.id if its not in array and removes it if its in there already
-                        onClick={() => {
-                          setEditingItems(_.xor([...editingItems], [item.id]));
-                        }}
-                      >
-                        <Tooltip
-                          title="Cancel"
-                          leaveDelay={100}
-                          enterDelay={100}
-                          disableFocusListener
-                          disableTouchListener
+                      {editingItems.includes(item.id) ? (
+                        <IconButton
+                          sx={{
+                            height: "auto",
+                            display: "flex",
+                            alignItems: "center",
+                            margin: "auto",
+                          }}
+                          size="small"
+                          //adds item.id if its not in array and removes it if its in there already
+                          onClick={() => {
+                            setEditingItems(_.xor([...editingItems], [item.id]));
+                          }}
                         >
                           <CancelTwoToneIcon fontSize="inherit" />
-                        </Tooltip>
-                      </IconButton>
-                    ) : (
-                      <IconButton
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          margin: "auto",
-                        }}
-                        size="small"
-                        //adds item.id if its not in array and removes it if its in there already
-                        onClick={() => {
-                          setEditingItems(_.xor([...editingItems], [item.id]));
-                        }}
-                      >
-                        <Tooltip
-                          title="Edit"
-                          leaveDelay={100}
-                          enterDelay={100}
-                          disableFocusListener
-                          disableTouchListener
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            margin: "auto",
+                          }}
+                          size="small"
+                          //adds item.id if its not in array and removes it if its in there already
+                          onClick={() => {
+                            setEditingItems(_.xor([...editingItems], [item.id]));
+                          }}
                         >
                           <EditTwoToneIcon fontSize="inherit" />
-                        </Tooltip>
-                      </IconButton>
-                    )}
-                  </Box>
+                        </IconButton>
+                      )}
+                    </Box>
                 );
               })}
             </Box>
@@ -214,5 +201,6 @@ export default function Menu() {
         addItem={(payload) => setItems([...items, payload])}
       />
     </Paper>
+    </>
   );
 }
