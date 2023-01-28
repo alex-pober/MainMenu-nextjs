@@ -14,7 +14,8 @@ import Menu from '@mui/material/Menu';
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 export default function NavBar(){
   const session = useSession()
-
+  const [menuToggle, setMenuToggle] = useState(null);
+  console.log(session)
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -29,7 +30,7 @@ export default function NavBar(){
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Photos
+            MainMenu
           </Typography>
           {session && (
             <div>
@@ -38,14 +39,14 @@ export default function NavBar(){
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={handleMenu}
+                onClick={(e) => {setMenuToggle(e.currentTarget)}}
                 color="inherit"
               >
                 <AccountCircle />
               </IconButton>
               <Menu
                 id="menu-appbar"
-                anchorEl={anchorEl}
+                anchorEl={menuToggle}
                 anchorOrigin={{
                   vertical: 'top',
                   horizontal: 'right',
@@ -55,11 +56,10 @@ export default function NavBar(){
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
+                open={Boolean(menuToggle)}
+                onClose={() => {setMenuToggle(null)}}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem >Sign Out</MenuItem>
               </Menu>
             </div>
           )}
