@@ -60,6 +60,7 @@ export default function Menu() {
         borderRadius: "25px",
         display: "flex",
         flexDirection: "column",
+        mt: 1
       }}
     >
       <Typography variant="h5" align="center" sx={{ pt: 1 }}>

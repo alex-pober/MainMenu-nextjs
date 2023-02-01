@@ -15,9 +15,8 @@ export default function NavBar(){
   const [menuToggle, setMenuToggle] = useState(null);
   console.log(session)
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar sx={{justifyContent: 'space-between'}}>
+      <AppBar position="static" elevation={1} color='transparent'>
+        <Toolbar variant='dense' sx={{justifyContent: 'space-between'}}>
         <Image width={200} height={100} src='https://cpnjwzukiwcoiurbkavl.supabase.co/storage/v1/object/public/assets/main-menu-logo.png'/>
           {session && (
             <div>
@@ -52,6 +51,5 @@ export default function NavBar(){
           )}
         </Toolbar>
       </AppBar>
-    </Box>
   )
 }
