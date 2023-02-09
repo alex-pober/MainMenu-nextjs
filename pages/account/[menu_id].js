@@ -1,5 +1,3 @@
-
-import { getClientBuildManifest } from "next/dist/client/route-loader";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -13,7 +11,6 @@ import EditItem from "../../components/EditItem";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import IconButton from "@mui/material/IconButton";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import NavBar from "../../components/NavBar";
 export default function Menu() {
   const router = useRouter();

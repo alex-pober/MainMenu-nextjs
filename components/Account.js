@@ -125,7 +125,6 @@ export default function Account({ session }) {
 
   return (
     <>
-      <NavBar />
       <Box
         sx={{ backgroundColor: "#e4e9f2", maxWidth: "950px", m: "auto", p: 5 }}
       >
