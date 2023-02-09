@@ -163,6 +163,7 @@ export default function Menu() {
                             display: "flex",
                             alignItems: "center",
                             margin: "auto",
+                            p: 1
                           }}
                           size="small"
                           //adds item.id if its not in array and removes it if its in there already

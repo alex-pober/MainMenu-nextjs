@@ -111,7 +111,7 @@ export default function NavBar() {
   );
 
   return (
-    <AppBar position="static" elevation={1} color="transparent">
+    <AppBar position="static" variant="outlined" color="transparent">
       <Toolbar variant="dense" sx={{ justifyContent: "space-between" }}>
         <Image
           width={100}
@@ -145,14 +145,14 @@ export default function NavBar() {
                   <Link href="/account">
                     <Button
                       sx={{ mr: 1 }}
-                      variant="contained"
+                      variant="outlined"
                       startIcon={<DashboardIcon />}
                     >
                       Dashboard
                     </Button>
                   </Link>
                   <Link href="/account">
-                    <Button variant="contained" startIcon={<MenuBookIcon />}>
+                    <Button variant="outlined" startIcon={<MenuBookIcon />}>
                       View Live Menu
                     </Button>
                   </Link>

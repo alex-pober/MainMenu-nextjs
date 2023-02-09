@@ -61,6 +61,7 @@ export default function EditItem({ item, supabase, updateItemState, deleteItemSt
         m: 0.5,
         alignItems: "center",
         width: "-webkit-fill-available",
+        gap: '16px'
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -88,8 +89,9 @@ export default function EditItem({ item, supabase, updateItemState, deleteItemSt
         onChange={(e) => setPrice(e.target.value)}
         label="Price"
         margin="dense"
+        width="100px"
       />
-      <Box>
+      <Box sx={{display: 'flex', flexDirection: 'column'}}>
         <Button
           onClick={() => {
             updateItem(item, name, description, price);
@@ -106,7 +108,7 @@ export default function EditItem({ item, supabase, updateItemState, deleteItemSt
           variant="outlined"
           color="error"
           size="small"
-          sx={{ ml: 0.5 }}
+          sx={{width: 'min-content', m: 'auto'}}
         >
           <DeleteTwoToneIcon />
         </IconButton>
