@@ -2,7 +2,7 @@ import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 import { useState } from "react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createClient } from "@supabase/supabase-js";
-import Account from "../../components/Account";
+import Account from "../../components/ManageMenus";
 import Link from "next/link";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -35,7 +35,6 @@ export default function Login() {
                 onChange={(event, newValue) => {
                   console.log(newValue), setTab(newValue);
                 }}
-                aria-label="lab API tabs example"
               >
                 <Tab label="Manage Menus" value="1" />
                 <Tab label="Account Info" value="2" />

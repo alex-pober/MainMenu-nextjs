@@ -111,9 +111,10 @@ export default function NavBar() {
   );
 
   return (
-    <AppBar position="static" variant="outlined" color="transparent">
+    <AppBar position="static" elevation={1} color="transparent">
       <Toolbar variant="dense" sx={{ justifyContent: "space-between" }}>
         <Image
+          alt="logo"
           width={100}
           height={100}
           src="https://cpnjwzukiwcoiurbkavl.supabase.co/storage/v1/object/public/assets/main-menu-logo.png"
@@ -145,19 +146,18 @@ export default function NavBar() {
                   <Link href="/account">
                     <Button
                       sx={{ mr: 1 }}
-                      variant="outlined"
-                      startIcon={<DashboardIcon />}
+                      variant="text"
                     >
                       Dashboard
                     </Button>
                   </Link>
                   <Link href="/account">
-                    <Button variant="outlined" startIcon={<MenuBookIcon />}>
-                      View Live Menu
+                    <Button
+                      variant="text"
+                    >
+                      Live Menu
                     </Button>
                   </Link>
-                </Box>
-                <Box>
                   <Button
                     variant="text"
                     onClick={() => {
