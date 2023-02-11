@@ -1,6 +1,36 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 
-export default function AccountInfo() {
+export default function AccountInfo({ session, userData }) {
+  const supabase = useSupabaseClient();
+  const user = useUser();
+  const [username, setUsername] = useState(userData.username);
+  const [contactEmail, setContactEmail] = useState(userData.contact_email);
+  const [contactNumber, setContactNumber] = useState(userData.contact_number);
+  const [loading, setLoading] = useState(true);
+
+  async function updateProfile({ username, contactEmail, contactNumber }) {
+    try {
+      setLoading(true);
+
+      const updates = {
+        id: user.id,
+        username,
+        contact_email: contactEmail,
+        contact_number: contactNumber,
+        updated_at: new Date().toISOString(),
+      };
+
+      let { error } = await supabase.from("profiles").upsert(updates);
+
+      if (error) throw error;
+      alert("Profile updated!");
+    } catch (error) {
+      alert("Error updating the data!");
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <>
       <div>

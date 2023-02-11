@@ -10,71 +10,14 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Popover from "@mui/material/Popover";
 import Modal from "@mui/material/Modal";
 import NavBar from "./NavBar";
-export default function Account({ session }) {
+export default function ManageMenus({session, menuData}) {
   const supabase = useSupabaseClient();
   const user = useUser();
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
-  const [contactNumber, setContactNumber] = useState(Number);
-  const [menus, setMenus] = useState(undefined);
+  // const [menus, setMenus] = useState(menuData);
   const [menuTitle, setMenuTitle] = useState(undefined);
   const [menuDescription, setMenuDescription] = useState(undefined);
   const [anchorEl, setAnchorEl] = useState(false);
-
-  useEffect(() => {
-    getProfile();
-    getMenus();
-  }, [session]);
-
-  async function getMenus() {
-    try {
-      setLoading(true);
-
-      let { data, error, status } = await supabase
-        .from("menu")
-        .select(`id, title, description`)
-        .eq("user_id", user.id);
-
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (data) {
-        setMenus(data);
-      }
-    } catch (error) {
-      alert("Error loading menus");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function getProfile() {
-    try {
-      setLoading(true);
-
-      let { data, error, status } = await supabase
-        .from("profiles")
-        .select(`username, contact_email, contact_number`)
-        .eq("id", user.id)
-        .single();
-
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (data) {
-        setUsername(data.username);
-        setContactEmail(data.contact_email);
-        setContactNumber(data.contact_number);
-      }
-    } catch (error) {
-      alert("Error loading user data!");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function updateProfile({ username, contactEmail, contactNumber }) {
     try {
@@ -126,10 +69,10 @@ export default function Account({ session }) {
   return (
     <>
       <Box
-        sx={{ backgroundColor: "#e4e9f2", maxWidth: "950px", m: "auto", p: 5 }}
+        sx={{ backgroundColor: "#e4e9f2", maxWidth: "950px", m: "auto", p: 2 }}
       >
         <Box sx={{ p: 1, display: "contents" }}>
-          {menus?.map((element) => {
+          {menuData?.map((element) => {
             return (
               <Link
                 key={element.id}
