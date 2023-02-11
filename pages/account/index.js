@@ -84,6 +84,7 @@ export default function Login() {
       {!session ? (
         <Auth
         supabaseClient={supabase}
+        redirectTo="http://localhost:3000/account"
         appearance={{ theme: ThemeSupa }}
         theme="dark"
           providers={["google"]}
@@ -94,6 +95,8 @@ export default function Login() {
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <TabList
                 centered
+                color="default"
+                sx={{backgroundColor: '#f5f5f5'}}
                 onChange={(event, newValue) => {
                   setTab(newValue);
                 }}
@@ -102,7 +105,7 @@ export default function Login() {
                 <Tab label="Account Info" value="2" />
               </TabList>
             </Box>
-            <TabPanel value="1">
+            <TabPanel sx={{p: 1}} value="1">
               <ManageMenus session={session} menuData={menuData} />
             </TabPanel>
             <TabPanel value="2">

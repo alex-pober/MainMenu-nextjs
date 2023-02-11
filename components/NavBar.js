@@ -111,7 +111,7 @@ export default function NavBar() {
   );
 
   return (
-    <AppBar position="static" elevation={1} color="transparent">
+    <AppBar position="static" elevation={1} color="default">
       <Toolbar variant="dense" sx={{ justifyContent: "space-between" }}>
         <Image
           alt="logo"

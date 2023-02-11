@@ -7,7 +7,7 @@ export default function AccountInfo({ session, userData }) {
   const [username, setUsername] = useState(userData.username);
   const [contactEmail, setContactEmail] = useState(userData.contact_email);
   const [contactNumber, setContactNumber] = useState(userData.contact_number);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   async function updateProfile({ username, contactEmail, contactNumber }) {
     try {

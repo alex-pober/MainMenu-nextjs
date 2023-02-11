@@ -10,6 +10,8 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Popover from "@mui/material/Popover";
 import Modal from "@mui/material/Modal";
 import NavBar from "./NavBar";
+import EditMenu from "./EditMenu";
+
 export default function ManageMenus({session, menuData}) {
   const supabase = useSupabaseClient();
   const user = useUser();
@@ -18,29 +20,6 @@ export default function ManageMenus({session, menuData}) {
   const [menuTitle, setMenuTitle] = useState(undefined);
   const [menuDescription, setMenuDescription] = useState(undefined);
   const [anchorEl, setAnchorEl] = useState(false);
-
-  async function updateProfile({ username, contactEmail, contactNumber }) {
-    try {
-      setLoading(true);
-
-      const updates = {
-        id: user.id,
-        username,
-        contact_email: contactEmail,
-        contact_number: contactNumber,
-        updated_at: new Date().toISOString(),
-      };
-
-      let { error } = await supabase.from("profiles").upsert(updates);
-
-      if (error) throw error;
-      alert("Profile updated!");
-    } catch (error) {
-      alert("Error updating the data!");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function createMenu({ menuTitle, menuDescription }) {
     try {
@@ -69,39 +48,43 @@ export default function ManageMenus({session, menuData}) {
   return (
     <>
       <Box
-        sx={{ backgroundColor: "#e4e9f2", maxWidth: "950px", m: "auto", p: 2 }}
+        sx={{ backgroundColor: "#e4e9f2", m: "auto", px: 1, maxWidth: "800px" }}
       >
         <Box sx={{ p: 1, display: "contents" }}>
           {menuData?.map((element) => {
             return (
-              <Link
-                key={element.id}
-                href={{
-                  pathname: `account/${element.id}`,
-                  query: { title: element.title, desc: element.description },
-                }}
-              >
-                <Paper
+                <Link
                   key={element.id}
-                  elevation={0}
-                  sx={{
-                    p: 2,
-                    my: 1,
-                    borderRadius: "10px",
-                    "&:hover": {
-                      outline: "2px solid #ffcc6b",
-                      cursor: "pointer",
-                    },
+                  href={{
+                    pathname: `account/${element.id}`,
+                    query: { title: element.title, desc: element.description },
                   }}
+                  style={{ position: 'relative', display: 'flex'}}
                 >
-                  <Typography color="#212121" variant="h6">
-                    {element.title}
-                  </Typography>
-                  <Typography color="#212121" variant="body2">
-                    {element.description}
-                  </Typography>
-                </Paper>
-              </Link>
+                  <Paper
+                    key={element.id}
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      my: 1,
+                      width: '100%',
+                      borderRadius: "10px",
+
+                      "&:hover": {
+                        outline: "2px solid #ffcc6b",
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <Typography color="#212121" variant="h6">
+                      {element.title}
+                    </Typography>
+                    <Typography color="#212121" variant="body2">
+                      {element.description}
+                    </Typography>
+                  </Paper>
+                  <EditMenu menu={element}/>
+                </Link>
             );
           })}
 
@@ -111,12 +94,12 @@ export default function ManageMenus({session, menuData}) {
             </Button>
           </Box>
 
-          <Modal open={anchorEl} onClose={() => setAnchorEl(!anchorEl)}>
+          <Modal sx={{display: 'flex'}} open={anchorEl} onClose={() => setAnchorEl(!anchorEl)}>
             <Paper
               elevation={0}
               sx={{
                 p: 2,
-                my: "50%",
+                my: "auto",
                 mx: "auto",
                 borderRadius: "10px",
                 display: "grid",
