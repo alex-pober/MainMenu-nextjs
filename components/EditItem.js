@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import IconButton from "@mui/material/IconButton";
 
-export default function EditItem({ item, supabase, updateItemState, deleteItemState }) {
+export default function EditItem({ item, supabase, deleteItemState }) {
   const [category, setCategory] = useState(item?.category);
   const [name, setName] = useState(item.name);
   const [description, setDescription] = useState(item.description);

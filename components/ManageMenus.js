@@ -12,7 +12,7 @@ import Modal from "@mui/material/Modal";
 import NavBar from "./NavBar";
 import EditMenu from "./EditMenu";
 
-export default function ManageMenus({session, menuData}) {
+export default function ManageMenus({ session, menuData }) {
   const supabase = useSupabaseClient();
   const user = useUser();
   const [loading, setLoading] = useState(true);
@@ -53,13 +53,14 @@ export default function ManageMenus({session, menuData}) {
         <Box sx={{ p: 1, display: "contents" }}>
           {menuData?.map((element) => {
             return (
+              <Box sx={{position: 'relative'}}>
                 <Link
                   key={element.id}
                   href={{
                     pathname: `account/${element.id}`,
                     query: { title: element.title, desc: element.description },
                   }}
-                  style={{ position: 'relative', display: 'flex'}}
+                  style={{ position: "relative", display: "flex" }}
                 >
                   <Paper
                     key={element.id}
@@ -67,7 +68,7 @@ export default function ManageMenus({session, menuData}) {
                     sx={{
                       p: 2,
                       my: 1,
-                      width: '100%',
+                      width: "100%",
                       borderRadius: "10px",
 
                       "&:hover": {
@@ -83,8 +84,9 @@ export default function ManageMenus({session, menuData}) {
                       {element.description}
                     </Typography>
                   </Paper>
-                  <EditMenu menu={element}/>
                 </Link>
+                <EditMenu menu={element} supabase={supabase} />
+              </Box>
             );
           })}
 
@@ -94,7 +96,11 @@ export default function ManageMenus({session, menuData}) {
             </Button>
           </Box>
 
-          <Modal sx={{display: 'flex'}} open={anchorEl} onClose={() => setAnchorEl(!anchorEl)}>
+          <Modal
+            sx={{ display: "flex" }}
+            open={anchorEl}
+            onClose={() => setAnchorEl(!anchorEl)}
+          >
             <Paper
               elevation={0}
               sx={{

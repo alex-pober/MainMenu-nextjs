@@ -42,7 +42,6 @@ export default function Login() {
         setUserData(data)
       }
     } catch (error) {
-      console.log(error)
       // alert("Error loading user data!");
 
     } finally {
