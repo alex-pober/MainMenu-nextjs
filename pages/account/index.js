@@ -71,6 +71,23 @@ export default function Login() {
       // setLoading(false);
     }
   }
+
+  async function deleteMenu(menuId) {
+    try {
+      let { error } = await supabase.from("menu").delete().eq("id", menuId);
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+    } finally {
+    }
+  }
+
+  function addMenuData(menuPayload) {
+    setMenuData([...menuData, menuPayload])
+  }
+
   useEffect(() => {
       console.log("thisran")
       getProfile();
@@ -105,7 +122,7 @@ export default function Login() {
               </TabList>
             </Box>
             <TabPanel sx={{p: 1}} value="1">
-              <ManageMenus session={session} menuData={menuData} />
+              <ManageMenus session={session} menuData={menuData} addMenuData={addMenuData}/>
             </TabPanel>
             <TabPanel value="2">
               <AccountInfo session={session} userData={userData}/>

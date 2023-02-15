@@ -12,6 +12,7 @@ import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import IconButton from "@mui/material/IconButton";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 import NavBar from "../../components/NavBar";
+
 export default function Menu() {
   const router = useRouter();
   const supabase = useSupabaseClient();

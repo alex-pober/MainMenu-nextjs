@@ -4,36 +4,32 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 
-export default function EditMenu({ menu, supabase }) {
-  async function deleteMenu(menu) {
-    console.log(menu)
-    try {
-      let { error } = await supabase.from("menu").delete().eq("id", menu.id);
-    } catch (error) {
-      console.log(error);
-    } finally {
-    }
-  }
+export default function EditMenu({ actionHandler }) {
+
+
   return (
-    <Box sx={{ position: "absolute", right: "0", top: "35%" }}>
+    <Box sx={{ position: "absolute", right: "0", top: "35%", marginInline: 1 }}>
       <IconButton
         variant="outlined"
         color="default"
         size="small"
         sx={{ width: "min-content", m: "auto" }}
+        onClick={() => {
+          actionHandler('edit')
+        }}
       >
-        <EditIcon />
+        <EditIcon fontSize="small"/>
       </IconButton>
       <IconButton
         variant="outlined"
         color="default"
         onClick={() => {
-          deleteMenu(menu)
+          actionHandler('delete')
         }}
         size="small"
         sx={{ width: "min-content", m: "auto" }}
       >
-        <DeleteIcon />
+        <DeleteIcon fontSize="small"/>
       </IconButton>
     </Box>
   );

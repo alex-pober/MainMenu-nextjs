@@ -12,10 +12,10 @@ import Modal from "@mui/material/Modal";
 import NavBar from "./NavBar";
 import EditMenu from "./EditMenu";
 
-export default function ManageMenus({ session, menuData }) {
+export default function ManageMenus({ session, menuData, addMenuData }) {
   const supabase = useSupabaseClient();
   const user = useUser();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   // const [menus, setMenus] = useState(menuData);
   const [menuTitle, setMenuTitle] = useState(undefined);
   const [menuDescription, setMenuDescription] = useState(undefined);
@@ -25,14 +25,22 @@ export default function ManageMenus({ session, menuData }) {
     try {
       setLoading(true);
 
-      let { error, status } = await supabase.from("menu").insert({
-        user_id: user.id,
-        title: menuTitle,
-        description: menuDescription,
-      });
+      let { error, status, data } = await supabase
+        .from("menu")
+        .insert({
+          user_id: user.id,
+          title: menuTitle,
+          description: menuDescription,
+        })
+        .select();
 
       if (error && status !== 406) {
         throw error;
+      }
+      console.log(data[0])
+
+      if (data) {
+        addMenuData(data[0])
       }
 
       setMenuTitle(undefined);
@@ -40,7 +48,6 @@ export default function ManageMenus({ session, menuData }) {
     } catch (error) {
       alert("Error creating menu!");
     } finally {
-      getMenus();
       setLoading(false);
     }
   }
@@ -53,7 +60,7 @@ export default function ManageMenus({ session, menuData }) {
         <Box sx={{ p: 1, display: "contents" }}>
           {menuData?.map((element) => {
             return (
-              <Box sx={{position: 'relative'}}>
+              <Box sx={{ position: "relative" }}>
                 <Link
                   key={element.id}
                   href={{
@@ -85,7 +92,11 @@ export default function ManageMenus({ session, menuData }) {
                     </Typography>
                   </Paper>
                 </Link>
-                <EditMenu menu={element} supabase={supabase} />
+                <EditMenu
+                  actionHandler={(actionType) => {
+                    console.log(actionType, element.id);
+                  }}
+                />
               </Box>
             );
           })}
