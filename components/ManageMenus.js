@@ -12,11 +12,10 @@ import Modal from "@mui/material/Modal";
 import NavBar from "./NavBar";
 import EditMenu from "./EditMenu";
 
-export default function ManageMenus({ session, menuData, addMenuData }) {
+export default function ManageMenus({ session, menuData, addMenuData, deleteMenuState }) {
   const supabase = useSupabaseClient();
   const user = useUser();
   const [loading, setLoading] = useState(false);
-  // const [menus, setMenus] = useState(menuData);
   const [menuTitle, setMenuTitle] = useState(undefined);
   const [menuDescription, setMenuDescription] = useState(undefined);
   const [anchorEl, setAnchorEl] = useState(false);
@@ -37,10 +36,9 @@ export default function ManageMenus({ session, menuData, addMenuData }) {
       if (error && status !== 406) {
         throw error;
       }
-      console.log(data[0])
 
       if (data) {
-        addMenuData(data[0])
+        addMenuData(data[0]);
       }
 
       setMenuTitle(undefined);
@@ -93,9 +91,8 @@ export default function ManageMenus({ session, menuData, addMenuData }) {
                   </Paper>
                 </Link>
                 <EditMenu
-                  actionHandler={(actionType) => {
-                    console.log(actionType, element.id);
-                  }}
+                  menuId={element.id}
+                  deleteMenuState={deleteMenuState}
                 />
               </Box>
             );

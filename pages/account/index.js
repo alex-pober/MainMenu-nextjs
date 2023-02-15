@@ -21,29 +21,28 @@ export default function Login() {
   const session = useSession();
   const supabase = useSupabaseClient();
   const [tab, setTab] = useState("1");
-  const [userData, setUserData] = useState(undefined)
-  const [menuData, setMenuData] = useState(undefined)
-
+  const [userData, setUserData] = useState(undefined);
+  const [menuData, setMenuData] = useState(undefined);
+  console.log(menuData)
   async function getProfile() {
     try {
       // setLoading(true);
 
       let { data, error, status } = await supabase
-      .from("profiles")
-      .select(`username, contact_email, contact_number`)
-      .eq("id", user?.id)
-      .single();
+        .from("profiles")
+        .select(`username, contact_email, contact_number`)
+        .eq("id", user?.id)
+        .single();
 
       if (error && status !== 406) {
         throw error;
       }
 
       if (data) {
-        setUserData(data)
+        setUserData(data);
       }
     } catch (error) {
       // alert("Error loading user data!");
-
     } finally {
       // setLoading(false);
     }
@@ -54,9 +53,9 @@ export default function Login() {
       // setLoading(true);
 
       let { data, error, status } = await supabase
-      .from("menu")
-      .select(`id, title, description`)
-      .eq("user_id", user?.id);
+        .from("menu")
+        .select(`id, title, description`)
+        .eq("user_id", user?.id);
 
       if (error && status !== 406) {
         throw error;
@@ -79,19 +78,55 @@ export default function Login() {
       if (error) {
         throw error;
       }
+
+      setMenuData(menuData.filter((menu) => menu.id !== menuId));
     } catch (error) {
     } finally {
     }
   }
 
+  async function updateMenu(data) {
+    try {
+      //set loading
+      let { data, error } = await supabase
+        .from("menu")
+        .update({
+          title: menuTitle,
+          description: menuDescription,
+        })
+        .eq("id", menu.id)
+        .select();
+
+      if (error) {
+        throw error;
+      }
+
+      if (data) {
+        setMenuData(
+          menuData.map((menu) => {
+            if (menu.id === data[0].id) {
+              return data[0];
+            } else {
+              return item;
+            }
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      //finish loading
+    }
+  }
+
   function addMenuData(menuPayload) {
-    setMenuData([...menuData, menuPayload])
+    setMenuData([...menuData, menuPayload]);
   }
 
   useEffect(() => {
-      console.log("thisran")
-      getProfile();
-      getMenus();
+    console.log("thisran");
+    getProfile();
+    getMenus();
   }, [user]);
 
   return (
@@ -99,10 +134,10 @@ export default function Login() {
       <NavBar />
       {!session ? (
         <Auth
-        supabaseClient={supabase}
-        redirectTo="http://localhost:3000/account"
-        appearance={{ theme: ThemeSupa }}
-        theme="dark"
+          supabaseClient={supabase}
+          redirectTo="http://localhost:3000/account"
+          appearance={{ theme: ThemeSupa }}
+          theme="dark"
           providers={["google"]}
         />
       ) : (
@@ -112,7 +147,7 @@ export default function Login() {
               <TabList
                 centered
                 color="default"
-                sx={{backgroundColor: '#f5f5f5'}}
+                sx={{ backgroundColor: "#f5f5f5" }}
                 onChange={(event, newValue) => {
                   setTab(newValue);
                 }}
@@ -121,11 +156,16 @@ export default function Login() {
                 <Tab label="Account Info" value="2" />
               </TabList>
             </Box>
-            <TabPanel sx={{p: 1}} value="1">
-              <ManageMenus session={session} menuData={menuData} addMenuData={addMenuData}/>
+            <TabPanel sx={{ p: 1 }} value="1">
+              <ManageMenus
+                session={session}
+                menuData={menuData}
+                addMenuData={addMenuData}
+                deleteMenuState={deleteMenu}
+              />
             </TabPanel>
             <TabPanel value="2">
-              <AccountInfo session={session} userData={userData}/>
+              <AccountInfo session={session} userData={userData} />
             </TabPanel>
           </TabContext>
         </Box>

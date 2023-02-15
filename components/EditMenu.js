@@ -4,8 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 
-export default function EditMenu({ actionHandler }) {
-
+export default function EditMenu({ menuId, deleteMenuState }) {
 
   return (
     <Box sx={{ position: "absolute", right: "0", top: "35%", marginInline: 1 }}>
@@ -15,21 +14,21 @@ export default function EditMenu({ actionHandler }) {
         size="small"
         sx={{ width: "min-content", m: "auto" }}
         onClick={() => {
-          actionHandler('edit')
+          actionHandler("edit");
         }}
       >
-        <EditIcon fontSize="small"/>
+        <EditIcon fontSize="small" />
       </IconButton>
       <IconButton
         variant="outlined"
         color="default"
         onClick={() => {
-          actionHandler('delete')
+          deleteMenuState(menuId);
         }}
         size="small"
         sx={{ width: "min-content", m: "auto" }}
       >
-        <DeleteIcon fontSize="small"/>
+        <DeleteIcon fontSize="small" />
       </IconButton>
     </Box>
   );
