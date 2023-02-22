@@ -16,23 +16,24 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import NavBar from "../../components/NavBar";
 import AccountInfo from "../../components/AccountInfo";
+
 export default function Login() {
-  const user = useUser();
+  const user = useUser()
   const session = useSession();
   const supabase = useSupabaseClient();
   const [tab, setTab] = useState("1");
   const [userData, setUserData] = useState(undefined);
   const [menuData, setMenuData] = useState(undefined);
-  console.log(menuData)
-  async function getProfile() {
+  console.log(user)
+  async function getProfile(userId) {
     try {
       // setLoading(true);
 
       let { data, error, status } = await supabase
-        .from("profiles")
-        .select(`username, contact_email, contact_number`)
-        .eq("id", user?.id)
-        .single();
+      .from("profiles")
+      .select(`username, contact_email, contact_number`)
+      .eq("id", userId)
+      .single()
 
       if (error && status !== 406) {
         throw error;
@@ -40,11 +41,13 @@ export default function Login() {
 
       if (data) {
         setUserData(data);
+
       }
     } catch (error) {
-      // alert("Error loading user data!");
+      console.log(error)
     } finally {
       // setLoading(false);
+      getMenus();
     }
   }
 
@@ -53,9 +56,9 @@ export default function Login() {
       // setLoading(true);
 
       let { data, error, status } = await supabase
-        .from("menu")
-        .select(`id, title, description`)
-        .eq("user_id", user?.id);
+      .from("menu")
+      .select(`id, title, description`)
+      .eq("user_id", user?.id);
 
       if (error && status !== 406) {
         throw error;
@@ -89,13 +92,13 @@ export default function Login() {
     try {
       //set loading
       let { data, error } = await supabase
-        .from("menu")
-        .update({
-          title: menuTitle,
-          description: menuDescription,
-        })
-        .eq("id", menu.id)
-        .select();
+      .from("menu")
+      .update({
+        title: menuTitle,
+        description: menuDescription,
+      })
+      .eq("id", menu.id)
+      .select();
 
       if (error) {
         throw error;
@@ -110,35 +113,34 @@ export default function Login() {
               return item;
             }
           })
-        );
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        //finish loading
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      //finish loading
     }
-  }
 
   function addMenuData(menuPayload) {
     setMenuData([...menuData, menuPayload]);
   }
 
-  useEffect(() => {
-    console.log("thisran");
-    getProfile();
-    getMenus();
-  }, [user]);
 
-  return (
-    <>
+    useEffect(() => {
+      getProfile(user?.id);
+    }, [user]);
+
+    return (
+      <>
       <NavBar />
       {!session ? (
         <Auth
-          supabaseClient={supabase}
-          redirectTo="http://localhost:3000/account"
-          appearance={{ theme: ThemeSupa }}
-          theme="dark"
-          providers={["google"]}
+        supabaseClient={supabase}
+        redirectTo="http://localhost:3000/account"
+        appearance={{ theme: ThemeSupa }}
+        theme="dark"
+        providers={["google"]}
         />
       ) : (
         <Box>

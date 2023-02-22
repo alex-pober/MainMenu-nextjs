@@ -58,7 +58,7 @@ export default function ManageMenus({ session, menuData, addMenuData, deleteMenu
         <Box sx={{ p: 1, display: "contents" }}>
           {menuData?.map((element) => {
             return (
-              <Box sx={{ position: "relative" }}>
+              <Box key={element.id} sx={{ position: "relative" }}>
                 <Link
                   key={element.id}
                   href={{
