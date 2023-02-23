@@ -9,8 +9,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import NavBar from "../../components/NavBar";
-import Tabs from "@mui/material/Tabs";
-
+import TabSwitcher from "../../components/TabSwitcher";
 export default function AccountInfo() {
   const supabase = useSupabaseClient();
   const user = useUser();
@@ -19,8 +18,7 @@ export default function AccountInfo() {
   const [contactEmail, setContactEmail] = useState(userData?.contact_email);
   const [contactNumber, setContactNumber] = useState(userData?.contact_number);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState(1);
-  console.log(tab)
+
   async function getProfile(userId) {
     try {
       // setLoading(true);
@@ -78,28 +76,7 @@ export default function AccountInfo() {
   return (
     <>
       <NavBar />
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          centered
-          color="default"
-          sx={{ backgroundColor: "#f5f5f5" }}
-          value={tab}
-          onChange={(event, newValue) => {
-            setTab(newValue);
-          }}
-        >
-          <Tab
-            component="a"
-            label="Manage Menus"
-            href="/menu-manager"
-          />
-          <Tab
-            component="a"
-            label="Account Info"
-            href="account/account-info"
-          />
-        </Tabs>
-      </Box>
+      <TabSwitcher />
       <div>
         <label htmlFor="email">Email</label>
         <input

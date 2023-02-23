@@ -10,21 +10,31 @@ import { createClient } from "@supabase/supabase-js";
 import ManageMenus from "../../components/ManageMenus";
 import Link from "next/link";
 import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import NavBar from "../../components/NavBar";
-import AccountInfo from "../../components/AccountInfo";
+import Tabs from "@mui/material/Tabs";
+import {forwardRef} from "react";
+import TabSwitcher from '../../components/TabSwitcher';
+
+const LinkTab = forwardRef(({href, ...rest}, ref) => (
+  <Link href={href} passHref ref={ref}>
+    <Tab component="div" {...rest}/>
+  </Link>
+))
 
 export default function MenuManager() {
+  const [tab, setTab] = useState(1);
+  const session = useSession();
   return (
-    <ManageMenus
-                session={session}
-                menuData={menuData}
-                addMenuData={addMenuData}
-                deleteMenuState={deleteMenu}
-              />
+  <>
+  <NavBar />
+  <TabSwitcher />
+<ManageMenus
+            session={session}
+            // menuData={menuData}
+            // addMenuData={addMenuData}
+            // deleteMenuState={deleteMenu}
+          />
+  </>
   )
 }
