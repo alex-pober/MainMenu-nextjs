@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import NavBar from "../../components/NavBar";
 import TabSwitcher from "../../components/TabSwitcher";
+
 export default function AccountInfo() {
   const supabase = useSupabaseClient();
   const user = useUser();
@@ -22,7 +23,6 @@ export default function AccountInfo() {
   async function getProfile(userId) {
     try {
       // setLoading(true);
-
       let { data, error, status } = await supabase
         .from("profiles")
         .select(`username, contact_email, contact_number`)
@@ -34,7 +34,9 @@ export default function AccountInfo() {
       }
 
       if (data) {
-        setUserData(data);
+        setUsername(data.username);
+        setContactEmail(data.contact_email);
+        setContactNumber(data.contact_number);
       }
     } catch (error) {
       console.log(error);
@@ -67,7 +69,7 @@ export default function AccountInfo() {
   }
   useEffect(() => {
     async function loadData() {
-      getProfile(user.id);
+      getProfile(user?.id);
     }
 
     if (user) loadData();
@@ -82,7 +84,7 @@ export default function AccountInfo() {
         <input
           id="email"
           type="text"
-          value={userData.contact_email || ""}
+          value={contactEmail || ""}
           disabled
         />
       </div>

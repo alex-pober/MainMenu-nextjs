@@ -15,10 +15,7 @@ import { useRouter } from "next/router";
 
 const LinkTab = forwardRef(({ href, ...rest }, ref) => (
   <Link href={href} passHref ref={ref}>
-    <Tab
-      component="div"
-      {...rest}
-    />
+    <Tab {...rest}  />
   </Link>
 ));
 
@@ -37,8 +34,16 @@ export default function TabSwitcher() {
           setTab(newValue);
         }}
       >
-        <LinkTab href="/account/menu-manager" label="Manage Menus" value={"/account/menu-manager"}></LinkTab>
-        <LinkTab href="/account/account-info" label="Account Info" value={"/account/account-info"}></LinkTab>
+        <LinkTab
+          href="/account/menu-manager"
+          label="Manage Menus"
+          value={"/account/menu-manager"}
+        ></LinkTab>
+        <LinkTab
+          href="/account/account-info"
+          label="Account Info"
+          value={"/account/account-info"}
+        ></LinkTab>
       </Tabs>
     </Box>
   );

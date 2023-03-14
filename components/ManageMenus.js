@@ -12,10 +12,11 @@ import Modal from "@mui/material/Modal";
 import NavBar from "./NavBar";
 import EditMenu from "./EditMenu";
 
-export default function ManageMenus({ session, menuData, addMenuData, deleteMenuState }) {
+export default function ManageMenus({addMenuData, deleteMenuState }) {
   const supabase = useSupabaseClient();
   const user = useUser();
   const [loading, setLoading] = useState(false);
+  const [menuData, setMenuData] = useState(undefined);
   const [menuTitle, setMenuTitle] = useState(undefined);
   const [menuDescription, setMenuDescription] = useState(undefined);
   const [anchorEl, setAnchorEl] = useState(false);
@@ -49,6 +50,34 @@ export default function ManageMenus({ session, menuData, addMenuData, deleteMenu
       setLoading(false);
     }
   }
+
+  async function getMenus(user) {
+    try {
+      // setLoading(true);
+
+      let { data, error, status } = await supabase
+      .from("menu")
+      .select(`id, title, description`)
+      .eq("user_id", user?.id);
+
+      if (error && status !== 406) {
+        throw error;
+      }
+
+      if (data) {
+        console.log(data)
+        setMenuData(data);
+      }
+    } catch (error) {
+      // alert("Error loading menus");
+    } finally {
+      // setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getMenus(user);
+  }, [user]);
 
   return (
     <>
